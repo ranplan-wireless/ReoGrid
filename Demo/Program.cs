@@ -17,12 +17,7 @@
  ****************************************************************************/
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-
-using unvell.Common;
-using unvell.ReoGrid.Demo.Styles;
 
 namespace unvell.ReoGrid.Demo
 {
@@ -35,6 +30,7 @@ namespace unvell.ReoGrid.Demo
 		static void Main()
 		{
 			Application.EnableVisualStyles();
+
 			Application.SetCompatibleTextRenderingDefault(false);
 
 			Application.Run(new DemoItemsForm());
