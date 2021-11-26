@@ -69,6 +69,42 @@ namespace unvell.ReoGrid
 					Button_Cancel = "Отмена";
 
 					break;
+
+                case "zh-CHS":
+                    Filter_SortAtoZ = "升序(&S)";
+                    Filter_SortZtoA = "降序(&O)";
+                    Filter_SelectAll = "(全选)";
+                    Filter_Blanks = "(空白)";
+
+                    Menu_InsertSheet = "插入(&I)";
+                    Menu_DeleteSheet = "删除(&D)";
+                    Menu_RenameSheet = "重命名(&R)...";
+
+                    Sheet_RenameDialog_Title = "重命名";
+                    Sheet_RenameDialog_NameLabel = "名称：";
+
+                    Button_OK = "确定";
+					Button_Cancel = "取消";
+
+                    break;
+
+                case "zh-CHT":
+					Filter_SortAtoZ = "升序(&S)";
+                    Filter_SortZtoA = "降序(&O)";
+                    Filter_SelectAll = "(全選)";
+                    Filter_Blanks = "(空白)";
+
+                    Menu_InsertSheet = "插入(&I)";
+                    Menu_DeleteSheet = "刪除(&D)";
+                    Menu_RenameSheet = "重命名(&R)...";
+
+                    Sheet_RenameDialog_Title = "重命名";
+                    Sheet_RenameDialog_NameLabel = "名稱：";
+
+                    Button_OK = "確定";
+                    Button_Cancel = "取消";
+
+					break;
 			}
 		}
 
@@ -76,12 +112,12 @@ namespace unvell.ReoGrid
 		/// <summary>
 		/// Text displayed on column filter. (Sort A to Z)
 		/// </summary>
-		public static string Filter_SortAtoZ = "Sort A to Z";
+		public static string Filter_SortAtoZ = "Ascending";
 
 		/// <summary>
 		/// Text displayed on column filter (Sort Z to A)
 		/// </summary>
-		public static string Filter_SortZtoA = "Sort Z to A";
+		public static string Filter_SortZtoA = "Descending";
 		/// <summary>
 		/// Text displayed on column filter (Select All)
 		/// </summary>
