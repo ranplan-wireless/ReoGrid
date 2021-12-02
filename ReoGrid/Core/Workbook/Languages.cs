@@ -29,59 +29,96 @@ namespace unvell.ReoGrid
 	{
 		public static CultureInfo Culture;
 
-		#region Public 
-		static LanguageResource()
-		{
-			Culture = Thread.CurrentThread.CurrentUICulture;
+		#region Public
 
-			switch (Culture.Name)
-			{
-				case "ja-JP":
-					Filter_SortAtoZ = "昇順(&S)";
-					Filter_SortZtoA = "降順(&O)";
-					Filter_SelectAll = "(すべて選択)";
-					Filter_Blanks = "(空白セル)";
+        static LanguageResource()
+        {
+            Culture = Thread.CurrentThread.CurrentUICulture;
 
-					Menu_InsertSheet = "挿入(&I)";
-					Menu_DeleteSheet = "削除(&D)";
-					Menu_RenameSheet = "名前変更(&R)...";
+            switch (Culture.Name)
+            {
+                case "ja-JP":
+                    Filter_SortAtoZ = "昇順(&S)";
+                    Filter_SortZtoA = "降順(&O)";
+                    Filter_SelectAll = "(すべて選択)";
+                    Filter_Blanks = "(空白セル)";
 
-					//Sheet = "シート";
-					Sheet_RenameDialog_Title = "シートの名前変更";
-					Sheet_RenameDialog_NameLabel = "名前(&N): ";
+                    Menu_InsertSheet = "挿入(&I)";
+                    Menu_DeleteSheet = "削除(&D)";
+                    Menu_RenameSheet = "名前変更(&R)...";
 
-					Button_Cancel = "キャンセル";
-					break;
+                    //Sheet = "シート";
+                    Sheet_RenameDialog_Title = "シートの名前変更";
+                    Sheet_RenameDialog_NameLabel = "名前(&N): ";
 
-				case "ru-RU":
-					Filter_SortAtoZ = "Сортировка от А до Я";
-					Filter_SortZtoA = "Сортировка от Я до А";
-					Filter_SelectAll = "(Выделить все)";
-					Filter_Blanks = "(Пустые)";
+                    Button_Cancel = "キャンセル";
+                    break;
 
-					Menu_InsertSheet = "&Вставить";
-					Menu_DeleteSheet = "&Удалить";
-					Menu_RenameSheet = "&Переименовать…";
+                case "ru-RU":
+                    Filter_SortAtoZ = "Сортировка от А до Я";
+                    Filter_SortZtoA = "Сортировка от Я до А";
+                    Filter_SelectAll = "(Выделить все)";
+                    Filter_Blanks = "(Пустые)";
 
-					Sheet_RenameDialog_Title = "Переименование листа";
-					Sheet_RenameDialog_NameLabel = "&Имя: ";
+                    Menu_InsertSheet = "&Вставить";
+                    Menu_DeleteSheet = "&Удалить";
+                    Menu_RenameSheet = "&Переименовать…";
 
-					Button_Cancel = "Отмена";
+                    Sheet_RenameDialog_Title = "Переименование листа";
+                    Sheet_RenameDialog_NameLabel = "&Имя: ";
 
-					break;
-			}
-		}
+                    Button_Cancel = "Отмена";
 
-		#region Filter
+                    break;
+
+                case "zh-CHS":
+                    Filter_SortAtoZ = "升序(&S)";
+                    Filter_SortZtoA = "降序(&O)";
+                    Filter_SelectAll = "(全选)";
+                    Filter_Blanks = "(空白)";
+
+                    Menu_InsertSheet = "插入(&I)";
+                    Menu_DeleteSheet = "删除(&D)";
+                    Menu_RenameSheet = "重命名(&R)...";
+
+                    Sheet_RenameDialog_Title = "重命名";
+                    Sheet_RenameDialog_NameLabel = "名称：";
+
+                    Button_OK = "确定";
+                    Button_Cancel = "取消";
+
+                    break;
+
+                case "zh-CHT":
+                    Filter_SortAtoZ = "升序(&S)";
+                    Filter_SortZtoA = "降序(&O)";
+                    Filter_SelectAll = "(全選)";
+                    Filter_Blanks = "(空白)";
+
+                    Menu_InsertSheet = "插入(&I)";
+                    Menu_DeleteSheet = "刪除(&D)";
+                    Menu_RenameSheet = "重命名(&R)...";
+
+                    Sheet_RenameDialog_Title = "重命名";
+                    Sheet_RenameDialog_NameLabel = "名稱：";
+
+                    Button_OK = "確定";
+                    Button_Cancel = "取消";
+
+                    break;
+            }
+        }
+
+        #region Filter
 		/// <summary>
 		/// Text displayed on column filter. (Sort A to Z)
 		/// </summary>
-		public static string Filter_SortAtoZ = "Sort A to Z";
+		public static string Filter_SortAtoZ = "Ascending";
 
 		/// <summary>
 		/// Text displayed on column filter (Sort Z to A)
 		/// </summary>
-		public static string Filter_SortZtoA = "Sort Z to A";
+		public static string Filter_SortZtoA = "Descending";
 		/// <summary>
 		/// Text displayed on column filter (Select All)
 		/// </summary>
