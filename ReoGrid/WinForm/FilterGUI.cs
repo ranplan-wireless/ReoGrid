@@ -21,6 +21,7 @@
 using System;
 
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 using RGRectF = System.Drawing.RectangleF;
@@ -105,28 +106,17 @@ namespace unvell.ReoGrid.WinForm
 			if (inEventProcess) return;
 
 			inEventProcess = true;
-
 			// 'Select All'
 			if (e.Index == 0)
 			{
-				if (CheckedListBox.GetItemCheckState(0) != e.NewValue)
-				{
-					for (int i = 1; i < CheckedListBox.Items.Count; i++)
-					{
-						CheckedListBox.SetItemChecked(i, e.NewValue == System.Windows.Forms.CheckState.Checked);
-						SelectedCount = CheckedListBox.Items.Count - 1;
-					}
+                if (CheckedListBox.GetItemCheckState(0) != e.NewValue)
+                {
+                    for (var i = 1; i < CheckedListBox.Items.Count; i++)
+                        CheckedListBox.SetItemChecked(i, e.NewValue == CheckState.Checked);
 
-					if (e.NewValue == System.Windows.Forms.CheckState.Checked)
-					{
-						SelectedCount = CheckedListBox.Items.Count - 1;
-					}
-					else
-					{
-						SelectedCount = 0;
-					}
-				}
-			}
+                    SelectedCount = e.NewValue == CheckState.Checked ? CheckedListBox.Items.Count - 1 : 0;
+                }
+            }
 			// others else 'Select All'
 			else if (e.NewValue != CheckedListBox.GetItemCheckState(0))
 			{
@@ -149,7 +139,8 @@ namespace unvell.ReoGrid.WinForm
 					if (SelectedCount >= CheckedListBox.Items.Count - 1)
 					{
 						CheckedListBox.SetItemChecked(0, true);
-					}
+                        SelectedCount = CheckedListBox.Items.Count - 1;
+                    }
 				}
 			}
 
@@ -237,38 +228,36 @@ namespace unvell.ReoGrid.WinForm
 						filterPanel.CheckedListBox.Items.Clear();
 
 						filterPanel.CheckedListBox.Items.Add(LanguageResource.Filter_SelectAll);
-						filterPanel.CheckedListBox.SetItemChecked(0, true);
+						filterPanel.CheckedListBox.SetItemChecked(0, headerBody.IsSelectAll);
 
 						try
 						{
 							headerBody.ColumnHeader.Worksheet.ControlAdapter.ChangeCursor(CursorStyle.Busy);
 
 							var items = headerBody.GetDistinctItems();
-							foreach (string item in items)
-							{
-								filterPanel.CheckedListBox.Items.Add(item);
 
-								if (headerBody.IsSelectAll)
-								{
-									filterPanel.CheckedListBox.SetItemChecked(filterPanel.CheckedListBox.Items.Count - 1, true);
-								}
-								else
-								{
-									filterPanel.CheckedListBox.SetItemChecked(filterPanel.CheckedListBox.Items.Count - 1,
-										headerBody.selectedTextItems.Contains(item));
-								}
-							}
-						}
+                            filterPanel.CheckedListBox.Items.AddRange(items.OfType<object>().ToArray());
+
+                            filterPanel.CheckedListBox.ItemCheck -= filterPanel.checkedListBox_ItemCheck;
+                            for (var i = 0; i < items.Count; i++)
+                            {
+                                var item = items[i];
+                                filterPanel.CheckedListBox.SetItemChecked(i + 1,
+                                    headerBody.IsSelectAll || headerBody.selectedTextItems.Contains(item));
+                            }
+                            filterPanel.CheckedListBox.ItemCheck += filterPanel.checkedListBox_ItemCheck;
+                        }
 						finally
 						{
 							headerBody.ColumnHeader.Worksheet.ControlAdapter.ChangeCursor(CursorStyle.PlatformDefault);
 						}
 
-						filterPanel.SelectedCount = filterPanel.CheckedListBox.Items.Count - 1;
+                        filterPanel.SelectedCount = filterPanel.CheckedListBox.CheckedItems.Count
+                                                    - (filterPanel.CheckedListBox.GetItemChecked(0) ? 1 : 0);
 
 						headerBody.DataDirty = false;
 
-						headerBody.IsSelectAll = true;
+						headerBody.IsSelectAll = filterPanel.SelectedCount == filterPanel.CheckedListBox.Items.Count - 1;
 					}
 				}
 

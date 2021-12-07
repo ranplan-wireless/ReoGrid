@@ -321,6 +321,8 @@ namespace unvell.ReoGrid
 				this.QuickSortColumn(columnIndex, range.Row, range.EndRow, range.Col, range.EndCol, order, ref affectRange,
 					cellDataComparer == null ? (Func<int, int, object, int>)CompareCell : UserCellDataComparerAdapter, sortedOrder);
 
+                if (RetrieveColumnHeader(columnIndex).Body is AutoColumnFilter.AutoColumnFilterBody columnFilterBody)
+                    columnFilterBody.autoFilter.Apply();
 #if DEBUG
 				sw.Stop();
 
