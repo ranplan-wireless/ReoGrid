@@ -48,9 +48,9 @@ namespace unvell.ReoGrid.Data
 
 		private AutoColumnFilterUI columnFilterUIFlag;
 
-		public RangePosition ApplyRange { get; private set; }
+        public RangePosition ApplyRange { get; private set; }
 
-		//internal RangePosition ApplyRange
+        //internal RangePosition ApplyRange
 		//{
 		//	get
 		//	{
@@ -669,6 +669,14 @@ namespace unvell.ReoGrid.Data
 				this.ApplyRange.SetCols(this.ApplyRange.Cols + e.Count);
 			}
 		}
+
+        public void RefreshApplyRange(RangePosition range)
+        {
+            if (this.Worksheet == null)
+                return;
+
+            ApplyRange = this.Worksheet.FixRange(range);
+        }
 	}
 	
 	#endregion // Auto Filter
