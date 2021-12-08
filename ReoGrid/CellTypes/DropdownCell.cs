@@ -51,18 +51,12 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		protected DropdownWindow DropdownPanel { get { return this.dropdownPanel; } }
 
-		private bool pullDownOnClick = false;
-
-		/// <summary>
+        /// <summary>
 		/// Determines whether or not to open the drop-down panel when user clicked inside cell.
 		/// </summary>
-		public virtual bool PullDownOnClick
-		{
-			get { return pullDownOnClick; }
-			set { this.pullDownOnClick = value; }
-		}
+		public virtual bool PullDownOnClick { get; } = false;
 
-		private Size dropdownButtonSize = new Size(20, 20);
+        private Size dropdownButtonSize = new Size(20, 20);
 
 		/// <summary>
 		/// Get or set the drop-down button size.
