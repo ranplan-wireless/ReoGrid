@@ -51,7 +51,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		protected DropdownWindow DropdownPanel { get { return this.dropdownPanel; } }
 
-		private bool pullDownOnClick = true;
+		private bool pullDownOnClick = false;
 
 		/// <summary>
 		/// Determines whether or not to open the drop-down panel when user clicked inside cell.
@@ -258,7 +258,7 @@ namespace unvell.ReoGrid.CellTypes
 				return true;
 			}
 			else
-				return false;
+				return base.OnMouseDown(e);
 		}
 
 		/// <summary>
