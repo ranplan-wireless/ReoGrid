@@ -318,8 +318,18 @@ namespace unvell.ReoGrid
 					throw new InvalidOperationException("Cannot change a part of range, all cells should be having same colspan on column.");
 				}
 
+                int Compare(int row, int col, object @base)
+                {
+                    if (@base == null) 
+                        return 0;
+
+                    var data = this.GetCellData(row, col) as IComparable;
+
+                    return CompareCell(data, @base, order);
+                }
+
 				this.QuickSortColumn(columnIndex, range.Row, range.EndRow, range.Col, range.EndCol, order, ref affectRange,
-					cellDataComparer == null ? (Func<int, int, object, int>)CompareCell : UserCellDataComparerAdapter, sortedOrder);
+					cellDataComparer == null ? (Func<int, int, object, int>)Compare : UserCellDataComparerAdapter, sortedOrder);
 
                 if (RetrieveColumnHeader(columnIndex).Body is AutoColumnFilter.AutoColumnFilterBody columnFilterBody)
                     columnFilterBody.autoFilter.Apply();
@@ -434,39 +444,55 @@ namespace unvell.ReoGrid
 
 		private Func<int, int, object, object, int> cellDataComparer;
 
-		private int CompareCell(int row, int col, object @base)
-		{
-			if (@base == null) return 0;
+        private static int CompareString(string data, string @base, SortOrder order)
+        {
+            var isDataEmpty = string.IsNullOrEmpty(data);
+            var isBaseEmpty = string.IsNullOrEmpty(@base);
 
-			var data = this.GetCellData(row, col) as IComparable;
-			if (data == null) return 0;
+            switch (isDataEmpty)
+            {
+                case true when isBaseEmpty:
+                    return 0;
+                case true:
+                    return order == SortOrder.Ascending ? int.MaxValue : int.MinValue;
+            }
 
-			if (data.GetType() == @base.GetType())
-			{
-				return data.CompareTo(@base);
-			}
-			else if (@base is string)
-			{
-				return Convert.ToString(data).CompareTo(@base);
-			}
-			else if (data is string)
-			{
-				return data.CompareTo(Convert.ToString(@base));
-			}
-			else
-			{
-				try
-				{
-					return ((double)Convert.ChangeType(data, typeof(double))).CompareTo(Convert.ChangeType(@base, typeof(double)));
-				}
-				catch
-				{
-					return Convert.ToString(data).CompareTo(Convert.ToString(@base));
-				}
-			}
-		}
+            if (isBaseEmpty)
+                return order == SortOrder.Ascending ? int.MinValue : int.MaxValue;
 
-		private void QuickSortColumn(int columnIndex, int start, int end, int startColumn, int endColumn, SortOrder order,
+            return data.CompareTo(@base);
+        }
+
+        private static int CompareCell(IComparable data, object @base, SortOrder order)
+        {
+            if (data == null) return 0;
+
+            if (data.GetType() == @base.GetType())
+            {
+                if (data is string stringData && @base is string stringBase)
+                    return CompareString(stringData, stringBase, order);
+
+                return data.CompareTo(@base);
+            }
+
+            if (@base is string stringBase1)
+                return CompareString(Convert.ToString(data), stringBase1, order);
+
+            if (data is string stringData1)
+                return CompareString(stringData1, Convert.ToString(@base), order);
+
+            try
+            {
+                return ((double) Convert.ChangeType(data, typeof(double))).CompareTo(
+                    Convert.ChangeType(@base, typeof(double)));
+            }
+            catch
+            {
+                return CompareString(Convert.ToString(data), Convert.ToString(@base), order);
+            }
+        }
+
+        private void QuickSortColumn(int columnIndex, int start, int end, int startColumn, int endColumn, SortOrder order,
 			ref RangePosition affectRange, Func<int, int, object, int> cellComparer, int[] sortedOrder)
 		{
 			while (start < end)
