@@ -33,7 +33,7 @@ namespace unvell.ReoGrid.Demo
 
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			Application.Run(new ReoGridWrapperForm());
+			Application.Run(new DemoItemsForm());
 
 			//BorderPainter.Instance.Dispose();
 			//ResourcePoolManager.Instance.Dispose();
