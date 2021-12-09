@@ -491,11 +491,9 @@ namespace unvell.ReoGrid
 					if (top >= bottom) break;
 
 					for (int col = startColumn; col <= endColumn; col++)
-					{
-						var v = GetCellData(top, col);
-						SetCellData(top, col, GetCellData(bottom, col));
-						SetCellData(bottom, col, v);
-					}
+                    {
+                        SwitchCell(top, col, bottom);
+                    }
 
 					if (affectRange.IsEmpty)
 					{
@@ -520,7 +518,18 @@ namespace unvell.ReoGrid
 			}
 		}
 
-		/// <summary>
+        private void SwitchCell(int top, int col, int bottom)
+        {
+            var v = GetCellData(top, col);
+            SetCellData(top, col, GetCellData(bottom, col));
+            SetCellData(bottom, col, v);
+
+            var cellBody = Cells[top, col].body;
+            Cells[top, col].body = Cells[bottom, col].body;
+            Cells[bottom, col].body = cellBody;
+        }
+
+        /// <summary>
 		/// Event raised when rows sorted on this worksheet.
 		/// </summary>
 		public event EventHandler<Events.RangeEventArgs> RowsSorted;
