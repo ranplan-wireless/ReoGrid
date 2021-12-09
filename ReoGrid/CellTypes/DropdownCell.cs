@@ -213,7 +213,12 @@ namespace unvell.ReoGrid.CellTypes
             }
 		}
 
-        private bool IsSelected() => sheet?.selectionRange.StartPos == Cell.Position;
+        private bool IsSelected()
+        {
+            var startPos = sheet?.selectionRange.StartPos;
+            var cellPos = Cell?.Position;
+            return startPos != null && cellPos != null && startPos == cellPos;
+        }
 
         /// <summary>
 		/// Draw the drop-down button surface.

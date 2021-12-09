@@ -550,9 +550,11 @@ namespace unvell.ReoGrid
             SetCellData(top, col, GetCellData(bottom, col));
             SetCellData(bottom, col, v);
 
-            var cellBody = Cells[top, col].body;
-            Cells[top, col].body = Cells[bottom, col].body;
-            Cells[bottom, col].body = cellBody;
+            var topCellBody = Cells[top, col].body;
+            var bottomCellBody = Cells[bottom, col].body;
+
+            Cells[top, col].Body = bottomCellBody?.Clone();
+            Cells[bottom, col].Body = topCellBody?.Clone();
         }
 
         /// <summary>
