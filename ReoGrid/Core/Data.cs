@@ -149,7 +149,8 @@ namespace unvell.ReoGrid
             var cell = Cells[cellPosition];
 
             // Exclude merged cells
-            if (cell != null && !cell.IsValidCell)
+            // Exclude hide rows
+            if (cell != null && !cell.IsValidCell || !RowHeaders[cellPosition.Row].IsVisible)
             {
                 return;
             }
