@@ -206,10 +206,21 @@ namespace unvell.ReoGrid.CellTypes
 			base.OnPaint(dc);
 
 			// draw button surface
-			this.OnPaintDropdownButton(dc, this.dropdownButtonRect);
+
+            if (IsSelected())
+            {
+    			this.OnPaintDropdownButton(dc, this.dropdownButtonRect);
+            }
 		}
 
-		/// <summary>
+        private bool IsSelected()
+        {
+            var startPos = sheet?.selectionRange.StartPos;
+            var cellPos = Cell?.Position;
+            return startPos != null && cellPos != null && startPos == cellPos;
+        }
+
+        /// <summary>
 		/// Draw the drop-down button surface.
 		/// </summary>
 		/// <param name="dc">ReoGrid cross-platform drawing context.</param>
@@ -238,7 +249,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// <returns></returns>
 		public override bool OnMouseDown(CellMouseEventArgs e)
 		{
-			if (PullDownOnClick || dropdownButtonRect.Contains(e.RelativePosition))
+			if (PullDownOnClick || dropdownButtonRect.Contains(e.RelativePosition) && IsSelected())
 			{
 				if (this.isDropdown)
 				{
@@ -262,7 +273,7 @@ namespace unvell.ReoGrid.CellTypes
 		/// <returns>True if event has been handled; Otherwise return false.</returns>
 		public override bool OnMouseMove(CellMouseEventArgs e)
 		{
-			if (dropdownButtonRect.Contains(e.RelativePosition))
+			if (IsSelected() && dropdownButtonRect.Contains(e.RelativePosition))
 			{
 				e.CursorStyle = CursorStyle.Hand;
 				return true;
@@ -301,7 +312,7 @@ namespace unvell.ReoGrid.CellTypes
 			return false;
 		}
 
-		private Worksheet sheet;
+		private Worksheet sheet => base.Cell == null ? null : (base.Cell.Worksheet);
 
 		/// <summary>
 		/// Push down to open the dropdown panel.
@@ -314,8 +325,6 @@ namespace unvell.ReoGrid.CellTypes
 			{
 				return;
 			}
-
-			sheet = base.Cell == null ? null : (base.Cell.Worksheet);
 
 			if (sheet != null && this.DropdownControl != null
 				&& Views.CellsViewport.TryGetCellPositionToControl(sheet.ViewportController.FocusView, this.Cell.InternalPos, out var p))

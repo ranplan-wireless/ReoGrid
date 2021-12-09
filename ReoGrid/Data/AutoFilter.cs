@@ -231,7 +231,12 @@ namespace unvell.ReoGrid.Data
 
 			internal bool IsDropdown { get; set; }
 
-			/// <summary>
+            public Rectangle GetHeadBodyRect(Size headerSize)
+            {
+                return GetColumnFilterButtonRect(headerSize);
+            }
+
+            /// <summary>
 			/// Repaint filter header body
 			/// </summary>
 			/// <param name="dc">ReoGrid drawing context</param>
