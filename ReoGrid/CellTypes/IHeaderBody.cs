@@ -40,8 +40,11 @@ namespace unvell.ReoGrid.CellTypes
 	/// Represent the interface of row and column header body
 	/// </summary>
 	public interface IHeaderBody
-	{
-		/// <summary>
+    {
+        Rectangle GetHeadBodyRect(Size headerSize);
+
+        /// <summary>
+        /// 
 		/// Onwer drawing
 		/// </summary>
 		/// <param name="dc">Drawing context</param>
@@ -76,8 +79,10 @@ namespace unvell.ReoGrid.CellTypes
 	/// Represent the interface of row and column header body
 	/// </summary>
 	public class HeaderBody : IHeaderBody
-	{
-		/// <summary>
+    {
+        public Rectangle GetHeadBodyRect(Size headerSize) => new Rectangle();
+
+        /// <summary>
 		/// Paint this header body.
 		/// </summary>
 		/// <param name="dc">Drawing context</param>

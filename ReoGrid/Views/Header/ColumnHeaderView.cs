@@ -97,7 +97,9 @@ namespace unvell.ReoGrid.Views
 						textBrush = headerTextBrush;
 					}
 
-					r.DrawHeaderText(header.RenderText, textBrush, rect);
+                    var headBodyRect = header.Body?.GetHeadBodyRect(new Size(header.InnerWidth * this.scaleFactor, sheet.colHeaderHeight));
+                    var rectangle = new Rectangle(rect.Location, new Size(rect.Width - (headBodyRect?.Width ?? 0), rect.Height));
+                    r.DrawHeaderText(header.RenderText, textBrush, rectangle);
 
 					if (header.Body != null)
 					{
