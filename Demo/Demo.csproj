@@ -364,6 +364,7 @@
     <ProjectReference Include="..\ReoGrid\ReoGrid.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
