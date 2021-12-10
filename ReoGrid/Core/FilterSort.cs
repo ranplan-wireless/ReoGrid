@@ -460,7 +460,6 @@ namespace unvell.ReoGrid
             return CompareCell(data.ComparableValue, @base.ComparableValue, order);
         }
 
-
         private static int CompareCell(IComparable data, object @base, SortOrder order)
         {
             if (data == null) return 0;
@@ -534,19 +533,6 @@ namespace unvell.ReoGrid
                 if (affectRange.Row > start) affectRange.Row = start;
                 if (affectRange.EndRow < end) affectRange.EndRow = end;
             }
-        }
-
-        private void SwitchCell(int top, int col, int bottom)
-        {
-            var v = GetCellData(top, col);
-            SetCellData(top, col, GetCellData(bottom, col));
-            SetCellData(bottom, col, v);
-
-            var topCellBody = Cells[top, col].body;
-            var bottomCellBody = Cells[bottom, col].body;
-
-            Cells[top, col].Body = bottomCellBody?.Clone();
-            Cells[bottom, col].Body = topCellBody?.Clone();
         }
 
         /// <summary>
