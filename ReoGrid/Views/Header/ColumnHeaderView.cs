@@ -161,19 +161,21 @@ namespace unvell.ReoGrid.Views
 						{
 							var header = sheet.cols[col];
 
-							if (header.Body != null)
-							{
-								// let body to decide the mouse behavior
-								var arg = new WorksheetMouseEventArgs(sheet, new Point(
-									((location.X - header.Left) * this.scaleFactor),
-									(location.Y / this.scaleFactor)),
-									new Point((location.X - header.Left) * this.scaleFactor + this.Left,
-										location.Y / this.scaleFactor), buttons, 1);
+                            if (header.Body != null)
+                            {
+                                // let body to decide the mouse behavior
+                                var arg = new WorksheetMouseEventArgs(sheet, new Point(
+                                        ((location.X - header.Left) * this.scaleFactor),
+                                        (location.Y / this.scaleFactor)),
+                                    new Point((location.X - header.Left) * this.scaleFactor + this.Left,
+                                        location.Y / this.scaleFactor), buttons, 1);
 
-								isProcessed = header.Body.OnMouseDown(
-									new Size(header.InnerWidth * this.scaleFactor, sheet.colHeaderHeight), arg);
-							}
-						}
+                                isProcessed = header.Body.OnMouseDown(
+                                    new Size(header.InnerWidth * this.scaleFactor, sheet.colHeaderHeight), arg);
+                                sheet.selectionRange.Col = col;
+                                sheet.selectionRange.Cols = 1;
+                            }
+                        }
 
 						if (!isProcessed
 							// do not allow to select column if selection mode is null
