@@ -323,7 +323,7 @@ namespace unvell.ReoGrid
                 }
 
 				this.QuickSortColumn(columnIndex, range.Row, range.EndRow, range.Col, range.EndCol, order, ref affectRange,
-					cellDataComparer == null ? Compare : UserCellDataComparerAdapter);
+					cellDataComparer == null ? (Func<ISortedEntity, ISortedEntity, int>)Compare : UserCellDataComparerAdapter);
 
                 if (RetrieveColumnHeader(columnIndex).Body is AutoColumnFilter.AutoColumnFilterBody columnFilterBody)
                     columnFilterBody.autoFilter.Apply();
