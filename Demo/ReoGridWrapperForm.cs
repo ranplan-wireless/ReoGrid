@@ -46,7 +46,7 @@ namespace unvell.ReoGrid.Demo
         private void LoadData(Worksheet worksheet)
         {
             var j = 0;
-            worksheet.DeleteRows(0, worksheet.ColumnCount);
+            worksheet.DeleteRows(0, worksheet.RowCount - 1);
 
             _data.ForEach((item, i) =>
             {
@@ -60,8 +60,13 @@ namespace unvell.ReoGrid.Demo
                     worksheet.Cells[i, 2].IsReadOnly = true;
 
                 //if (i % 2 == 0)
-                    worksheet[i, 2] = new DropdownListCell(Enum.GetNames(typeof(Types)).Except(new []{item.Type.ToString()}));
+                worksheet[i, 2] =
+                    new DropdownListCell(Enum.GetNames(typeof(Types)).Except(new[] {item.Type.ToString()}));
                 worksheet[i, 3] = item.Value;
+
+                if (i == 2)
+                    worksheet.Cells[i, 2].IsReadOnly = true;
+
                 j = i;
             });
             //worksheet[3, 0] = new string[worksheet.ColumnCount];
