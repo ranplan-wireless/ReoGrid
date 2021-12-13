@@ -14,7 +14,10 @@ namespace unvell.ReoGrid.Demo
         private IEnumerable<DataItem> _data = new List<DataItem>
         {
             new DataItem {Name = "Name A", Value = 0.62f, IsSelected = true, Type = Types.A},
+            new DataItem {Name = "Name B", Value = 0.75f, IsSelected = true, Type = Types.B},
             new DataItem {Name = "Name B", Value = 0.85f, IsSelected = false, Type = Types.B},
+            new DataItem {Name = "Name B", Value = 0.65f, IsSelected = false, Type = Types.B},
+            new DataItem {Name = "Name B", Value = 0.55f, IsSelected = true, Type = Types.B},
             new DataItem {Name = "Name C", Value = 12.56f, IsSelected = true, Type = Types.C},
             new DataItem {Name = "Name D", Value = -10.37f, IsSelected = true, Type = Types.D},
             new DataItem {Name = "Name E", Value = 10.32f, IsSelected = true, Type = Types.E},
@@ -102,6 +105,12 @@ namespace unvell.ReoGrid.Demo
             worksheet.AppendRows(1);
             worksheet[elderCount, 0] = Enumerable.Repeat(string.Empty, worksheet.ColumnCount).ToArray();
             _selectionFilter.RefreshApplyRange(RangePosition.EntireRange);
+        }
+
+        private void btn_Reset_Click(object sender, EventArgs e)
+        {
+            _table.Worksheets.First().Resize(0, 0);
+            LoadData(_table.Worksheets.First());
         }
 
         /*private void cb_Selected_CheckedChanged(object sender, System.EventArgs e)
