@@ -50,7 +50,6 @@ using unvell.ReoGrid.Formula;
 
 using unvell.ReoGrid.Utility;
 using unvell.ReoGrid.Graphics;
-
 namespace unvell.ReoGrid
 {
 	partial class Worksheet
@@ -911,10 +910,42 @@ namespace unvell.ReoGrid
 		/// </summary>
 		public string DisplayText { get { return InnerDisplay; } }
 
+		private bool _isReadOnly = false;
 		/// <summary>
 		/// Determine whether or not allow to change data of this cell.
 		/// </summary>
-		public bool IsReadOnly { get; set; }
+		public bool IsReadOnly
+		{
+			get => _isReadOnly;
+			set
+			{
+				if (_isReadOnly == false)
+					return;
+
+				_isReadOnly = value;
+
+				if (_isReadOnly && UseInnerReadOnlyStyle)
+					SetReadOnlyStyle(this);
+				else
+					RemoveReadOnlyStyle(this);
+			}
+		}
+
+		public bool UseInnerReadOnlyStyle { get; set; } = true;
+
+		private static void SetReadOnlyStyle(Cell cell)
+		{
+			cell.Style.BackColor = SolidColor.Silver;
+			var all = cell.Border.All;
+			all.Color = SolidColor.Gray;
+		}
+
+		private static void RemoveReadOnlyStyle(Cell cell)
+		{
+			cell.Style.BackColor = SolidColor.White;
+			var all = cell.Border.All;
+			all.Color = SolidColor.Gray;
+		}
 
 		/// <summary>
 		/// Start edit this cell.
