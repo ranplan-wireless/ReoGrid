@@ -462,7 +462,11 @@ namespace unvell.ReoGrid
 
         private static int CompareCell(IComparable data, object @base, SortOrder order)
         {
-            if (data == null) return 0;
+            if (data == null)
+                data = string.Empty;
+
+            if (@base == null)
+                @base = string.Empty;
 
             if (data.GetType() == @base.GetType())
             {
@@ -508,16 +512,26 @@ namespace unvell.ReoGrid
 
             for (var col = startColumn; col <= endColumn; col++)
             {
-                var sortResult = result.Select((t, i) => new CellSortEntity(i + start, t.OriginalIndex,
-                    GetCellData(t.OriginalIndex, col), Cells[t.OriginalIndex, col].body?.Clone())).ToList();
+                var sortResult = result.Select((t, i) =>
+                        new CellSortEntity(i + start, t.OriginalIndex, Cells[t.OriginalIndex, col].Clone()))
+                    .ToList();
 
                 foreach (var item in sortResult)
                 {
                     if (item.CurrentIndex == item.OriginalIndex)
                         continue;
 
-                    SetCellData(item.CurrentIndex, col, item.CellData);
-                    Cells[item.CurrentIndex, col].Body = item.CellBody;
+                    SetCellData(item.CurrentIndex, col, item.Cell.Data);
+                    SetCellBody(Cells[item.CurrentIndex, col], item.Cell.Body);
+                    if (string.IsNullOrEmpty(item.Cell.Formula))
+                        Cells[item.CurrentIndex, col].Formula = null;
+                    else
+                        SetCellFormula(Cells[item.CurrentIndex, col], item.Cell.Formula);
+
+                    SetCellStyleOwn(Cells[item.CurrentIndex, col], item.Cell.Style);
+                    var dataFormatArgs = item.Cell.DataFormatArgs;
+                    SetCellDataFormat(Cells[item.CurrentIndex, col], item.Cell.DataFormat, ref dataFormatArgs);
+                    Cells[item.CurrentIndex, col].IsReadOnly = item.Cell.IsReadOnly;
                 }
             }
 
@@ -544,22 +558,19 @@ namespace unvell.ReoGrid
 
         private class CellSortEntity
         {
-            public CellSortEntity(int currentIndex, int originalIndex, object cellData, ICellBody cellBody)
+            public CellSortEntity(int currentIndex, int originalIndex, Cell cell)
             {
                 CurrentIndex = currentIndex;
                 OriginalIndex = originalIndex;
-                CellData = cellData;
-                CellBody = cellBody;
+                Cell= cell;
             }
 
             public int CurrentIndex { get; }
-			public int OriginalIndex { get; }
+            public int OriginalIndex { get; }
 
-            public object CellData { get; }
-
-            public ICellBody CellBody { get; }
+            public Cell Cell { get; }
         }
-	}
+    }
 
 	/// <summary>
 	/// Sort order.
