@@ -41,6 +41,17 @@ namespace unvell.ReoGrid.Demo
 
             LoadData(_table.Worksheets.First());
             _selectionFilter = _table.Worksheets.First().CreateColumnFilter(RangePosition.EntireRange);
+            _selectionFilter.OnColumnSorted += SelectionFilterOnOnColumnSorted;
+        }
+
+        private static void SelectionFilterOnOnColumnSorted(object sender, OnColumnSortedEventHandlerArgs args)
+        {
+            if (!(sender is AutoColumnFilter filter))
+                return;
+
+            var worksheet = filter.Worksheet;
+            worksheet.SetRangeBorders(RangePosition.EntireRange, BorderPositions.All, RangeBorderStyle.BlackSolid);
+            worksheet.SetRangeBorders(args.Range, BorderPositions.All, RangeBorderStyle.BlackDash);
         }
 
         private void LoadData(Worksheet worksheet)
@@ -61,11 +72,14 @@ namespace unvell.ReoGrid.Demo
 
                 //if (i % 2 == 0)
                 worksheet[i, 2] =
-                    new DropdownListCell(Enum.GetNames(typeof(Types)).Except(new[] {item.Type.ToString()}));
+                    new DropdownListCell(Enum.GetNames(typeof(Types)).Except(new[] {item.Type.ToString()}))
+                        {DropdownPanelHeight = 50};
                 worksheet[i, 3] = item.Value;
 
-                if (i == 2)
+                if (i >= 2 && i < 5)
+                {
                     worksheet.Cells[i, 2].IsReadOnly = true;
+                }
 
                 j = i;
             });
