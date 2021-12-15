@@ -17,18 +17,13 @@
  ****************************************************************************/
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using unvell.ReoGrid.CellTypes;
 using unvell.ReoGrid.Core;
 #if DEBUG
 using System.Diagnostics;
 #endif // DEBUG
 
 using unvell.ReoGrid.Data;
-using unvell.ReoGrid.Views;
-using unvell.ReoGrid.Main;
 using unvell.ReoGrid.Interaction;
 
 namespace unvell.ReoGrid
@@ -528,7 +523,6 @@ namespace unvell.ReoGrid
                     else
                         SetCellFormula(Cells[item.CurrentIndex, col], item.Cell.Formula);
 
-                    SetCellStyleOwn(Cells[item.CurrentIndex, col], item.Cell.Style);
                     var dataFormatArgs = item.Cell.DataFormatArgs;
                     SetCellDataFormat(Cells[item.CurrentIndex, col], item.Cell.DataFormat, ref dataFormatArgs);
                     Cells[item.CurrentIndex, col].IsReadOnly = item.Cell.IsReadOnly;

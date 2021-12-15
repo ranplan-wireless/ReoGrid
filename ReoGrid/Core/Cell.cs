@@ -36,9 +36,6 @@ using RGFloat = System.Double;
 using unvell.ReoScript;
 using unvell.ReoGrid.Script;
 #endif // EX_SCRIPT
-
-using unvell.Common;
-
 using unvell.ReoGrid.Core;
 using unvell.ReoGrid.CellTypes;
 using unvell.ReoGrid.DataFormat;
@@ -910,43 +907,10 @@ namespace unvell.ReoGrid
 		/// </summary>
 		public string DisplayText { get { return InnerDisplay; } }
 
-		private bool _isReadOnly = false;
 		/// <summary>
 		/// Determine whether or not allow to change data of this cell.
 		/// </summary>
-		public bool IsReadOnly
-		{
-			get => _isReadOnly;
-			set
-			{
-				if (_isReadOnly == false)
-					return;
-
-				_isReadOnly = value;
-
-				if (_isReadOnly && UseInnerReadOnlyStyle)
-					SetReadOnlyStyle(this);
-				else
-					RemoveReadOnlyStyle(this);
-			}
-		}
-
-		public bool UseInnerReadOnlyStyle { get; set; } = true;
-
-		private static void SetReadOnlyStyle(Cell cell)
-		{
-			cell.Style.BackColor = SolidColor.Silver;
-			var all = cell.Border.All;
-			all.Color = SolidColor.Gray;
-		}
-
-		private static void RemoveReadOnlyStyle(Cell cell)
-		{
-			cell.Style.BackColor = SolidColor.White;
-			var all = cell.Border.All;
-			all.Color = SolidColor.Gray;
-		}
-
+		public bool IsReadOnly { get; set; }
 		/// <summary>
 		/// Start edit this cell.
 		/// </summary>
