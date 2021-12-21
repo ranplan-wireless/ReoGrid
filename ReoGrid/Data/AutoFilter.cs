@@ -18,7 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 #if WINFORM || ANDROID
 using RGFloat = System.Single;
 #elif WPF
@@ -93,49 +93,64 @@ namespace unvell.ReoGrid.Data
 			}
 		}
 
-		/// <summary>
-		/// Apply filter to update worksheet.
-		/// </summary>
-		public void Apply()
-		{
-			if (this.Worksheet == null) return;
+        /// <summary>
+        /// Apply filter to update worksheet.
+        /// </summary>
+        public void Apply()
+        {
+            if (this.Worksheet == null) return;
 
-			//int endRow = this.Worksheet.MaxContentRow;
+            //int endRow = this.Worksheet.MaxContentRow;
 
-			this.Worksheet.DoFilter(this.ApplyRange, r =>
-			{
-				for (int c = this.ApplyRange.Col; c <= this.ApplyRange.EndCol;)
-				{
-					var columnHeader = this.Worksheet.RetrieveColumnHeader(c);
-					if (columnHeader == null) { c++; continue; }
+            this.Worksheet.DoFilter(this.ApplyRange, r =>
+            {
+                for (int c = this.ApplyRange.Col; c <= this.ApplyRange.EndCol;)
+                {
+                    var columnHeader = this.Worksheet.RetrieveColumnHeader(c);
+                    if (columnHeader == null)
+                    {
+                        c++;
+                        continue;
+                    }
 
-					var columnFilterBody = columnHeader.Body as AutoColumnFilterBody;
-					if (columnFilterBody == null || columnFilterBody.IsSelectAll)
-					{
-						c++; continue;
-					}
+                    var columnFilterBody = columnHeader.Body as AutoColumnFilterBody;
+                    if (columnFilterBody == null || columnFilterBody.IsSelectAll)
+                    {
+                        c++;
+                        continue;
+                    }
 
-					var cell = this.Worksheet.GetCell(r, c);
-					if (cell == null) { c++; continue; }
+                    var cell = this.Worksheet.GetCell(r, c);
+                    if (cell == null)
+                    {
+                        c++;
+                        continue;
+                    }
 
-					var text = cell.DisplayText;
-					if (string.IsNullOrEmpty(text)) text = LanguageResource.Filter_Blanks;
+                    var text = cell.DisplayText;
+                    if (string.IsNullOrEmpty(text)) text = LanguageResource.Filter_Blanks;
 
-					if (!columnFilterBody.SelectedTextItems.Contains(text))
-					{
-						// hide the row
-						return false;
-					}
+                    if (!columnFilterBody.SelectedTextItems.Contains(text))
+                    {
+                        // hide the row
+                        return false;
+                    }
 
-					c += cell.Colspan;
-				}
+                    c += cell.Colspan;
+                }
 
-				// show the row
-				return true;
-			});
-		}
+                // show the row
+                return true;
+            });
 
-		#region FilterColumnCollection
+            var autoFilterHeaderBodies = Worksheet.ColumnHeaders
+                                                  .Select(header => header.Body)
+                                                  .Where(body => body is AutoColumnFilterBody);
+            foreach (var autoFilterHeaderBody in autoFilterHeaderBodies)
+                autoFilterHeaderBody.OnDataChange(ApplyRange.Row, ApplyRange.EndRow);
+        }
+
+        #region FilterColumnCollection
 		/// <summary>
 		/// Collection of column filters
 		/// </summary>
@@ -506,24 +521,31 @@ namespace unvell.ReoGrid.Data
 			{
 				if (this.ColumnHeader == null || this.ColumnHeader.Worksheet == null) return null;
 
-				List<string> items = new List<string>();
+				var items = new List<string>();
 
-				int maxRow = this.ColumnHeader.Worksheet.MaxContentRow;
+                var affectedFilters = ColumnHeader.Worksheet.ColumnHeaders
+                    .Where(header => header != ColumnHeader && header.Body is AutoColumnFilterBody filterBody && !filterBody.IsSelectAll)
+                    .Select(header => header.Body)
+                    .Cast<AutoColumnFilterBody>();
 
-				this.ColumnHeader.Worksheet.IterateCells(this.autoFilter.ApplyRange.Row,
-					this.ColumnHeader.Index, this.autoFilter.ApplyRange.Rows, 1, true,
-					(r, c, cell) =>
-					{
-						var str = cell.DisplayText;
-						if (string.IsNullOrEmpty(str)) str = LanguageResource.Filter_Blanks;
+                this.ColumnHeader.Worksheet.IterateCells(this.autoFilter.ApplyRange.Row,
+                    this.ColumnHeader.Index, this.autoFilter.ApplyRange.Rows, 1, true,
+                    (r, c, cell) =>
+                    {
+                        var str = cell.DisplayText;
+                        if (string.IsNullOrEmpty(str)) str = LanguageResource.Filter_Blanks;
 
-						if (!items.Contains(str))
-						{
-							items.Add(str);
-						}
+                        if (!items.Contains(str)
+                            && (selectedTextItems.Contains(str)
+                                || affectedFilters.All(filter =>
+                                    filter.selectedTextItems
+                                        .Contains(filter.ColumnHeader.Worksheet.GetCell(r, filter.ColumnHeader.Index)?.DisplayText))))
+                        {
+                            items.Add(str);
+                        }
 
-						return true;
-					});
+                        return true;
+                    });
 
 				items.Sort();
 
