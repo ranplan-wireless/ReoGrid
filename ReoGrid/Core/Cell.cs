@@ -36,9 +36,6 @@ using RGFloat = System.Double;
 using unvell.ReoScript;
 using unvell.ReoGrid.Script;
 #endif // EX_SCRIPT
-
-using unvell.Common;
-
 using unvell.ReoGrid.Core;
 using unvell.ReoGrid.CellTypes;
 using unvell.ReoGrid.DataFormat;
@@ -50,7 +47,6 @@ using unvell.ReoGrid.Formula;
 
 using unvell.ReoGrid.Utility;
 using unvell.ReoGrid.Graphics;
-
 namespace unvell.ReoGrid
 {
 	partial class Worksheet
@@ -915,7 +911,6 @@ namespace unvell.ReoGrid
 		/// Determine whether or not allow to change data of this cell.
 		/// </summary>
 		public bool IsReadOnly { get; set; }
-
 		/// <summary>
 		/// Start edit this cell.
 		/// </summary>

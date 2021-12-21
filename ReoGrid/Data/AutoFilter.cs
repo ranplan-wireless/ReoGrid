@@ -549,6 +549,11 @@ namespace unvell.ReoGrid.Data
 		/// </summary>
 		public event EventHandler FilterButtonPressed;
 
+        /// <summary>
+        /// Event raised when column sort process is done.
+        /// </summary>
+        public event OnColumnSortedEventHandler OnColumnSorted;
+
 		internal bool RaiseFilterButtonPress(AutoColumnFilterBody headerBody, Point point)
 		{
 			if (headerBody.ColumnHeader == null) return false;
@@ -565,7 +570,8 @@ namespace unvell.ReoGrid.Data
 			if (this.columnFilterUIFlag == AutoColumnFilterUI.DropdownButtonAndPanel)
 			{
 #if WINFORM
-				unvell.ReoGrid.WinForm.ColumnFilterContextMenu.ShowFilterPanel(headerBody, (System.Drawing.Point)point);
+                void RaiseColumnSorted(Func<OnColumnSortedEventHandlerArgs> f) => this.OnColumnSorted?.Invoke(this, f());
+				unvell.ReoGrid.WinForm.ColumnFilterContextMenu.ShowFilterPanel(headerBody, (System.Drawing.Point)point, RaiseColumnSorted);
 #elif WPF
 				var ctx = new System.Windows.Controls.ContextMenu();
 				ctx.Items.Add(new System.Windows.Controls.MenuItem() { Header = "Item" });
@@ -683,8 +689,7 @@ namespace unvell.ReoGrid.Data
             ApplyRange = this.Worksheet.FixRange(range);
         }
 	}
-	
-	#endregion // Auto Filter
+    #endregion // Auto Filter
 
 	/// <summary>
 	/// Flag to create UI of column filter

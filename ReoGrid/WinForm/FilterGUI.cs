@@ -23,7 +23,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
+using unvell.ReoGrid.Data;
 using RGRectF = System.Drawing.RectangleF;
 using unvell.ReoGrid.Interaction;
 
@@ -147,7 +147,8 @@ namespace unvell.ReoGrid.WinForm
 			inEventProcess = false;
 		}
 
-		internal static void ShowFilterPanel(unvell.ReoGrid.Data.AutoColumnFilter.AutoColumnFilterBody headerBody, Point point)
+		internal static void ShowFilterPanel(unvell.ReoGrid.Data.AutoColumnFilter.AutoColumnFilterBody headerBody, Point point,
+            Action<Func<OnColumnSortedEventHandlerArgs>> action = null)
 		{
 			if (headerBody.ColumnHeader == null || headerBody.ColumnHeader.Worksheet == null) return;
 
@@ -166,9 +167,10 @@ namespace unvell.ReoGrid.WinForm
 				filterPanel.SortAZItem.Click += (s, e) =>
 				{
 					try
-					{
-						worksheet.SortColumn(headerBody.ColumnHeader.Index, headerBody.autoFilter.ApplyRange,	SortOrder.Ascending);
-					}
+					{ 
+                        var affectedRange = worksheet.SortColumn(headerBody.ColumnHeader.Index, headerBody.autoFilter.ApplyRange,	SortOrder.Ascending);
+                        action?.Invoke(()=> new OnColumnSortedEventHandlerArgs(affectedRange));
+                    }
 					catch (Exception ex)
 					{
 						worksheet.NotifyExceptionHappen(ex);
@@ -177,15 +179,16 @@ namespace unvell.ReoGrid.WinForm
 
 				filterPanel.SortZAItem.Click += (s, e) =>
 				{
-					try
-					{
-						worksheet.SortColumn(headerBody.ColumnHeader.Index, headerBody.autoFilter.ApplyRange, SortOrder.Descending);
-					}
-					catch (Exception ex)
-					{
-						worksheet.NotifyExceptionHappen(ex);
-					}
-				};
+                    try
+                    {
+                        var affectedRange = worksheet.SortColumn(headerBody.ColumnHeader.Index, headerBody.autoFilter.ApplyRange, SortOrder.Descending);
+                        action?.Invoke(() => new OnColumnSortedEventHandlerArgs(affectedRange));
+                    }
+                    catch (Exception ex)
+                    {
+                        worksheet.NotifyExceptionHappen(ex);
+                    }
+                };
 
 				filterPanel.OkButton.Click += (s, e) =>
 				{

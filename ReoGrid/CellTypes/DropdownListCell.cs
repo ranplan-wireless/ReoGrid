@@ -402,9 +402,15 @@ namespace unvell.ReoGrid.CellTypes
 		/// </summary>
 		/// <returns>New instance of dropdown list.</returns>
 		public override ICellBody Clone()
-		{
-			return new DropdownListCell(this.candidates);
-		}
+        {
+            return new DropdownListCell(this.candidates)
+            {
+                DropdownButtonAutoHeight = this.DropdownButtonAutoHeight,
+                DropdownPanelHeight = this.DropdownPanelHeight,
+                DropdownButtonSize = this.DropdownButtonSize,
+                IsDropdown = this.IsDropdown
+            };
+        }
 	}
 #endif // WINFORM
 }
