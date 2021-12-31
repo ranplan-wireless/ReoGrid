@@ -252,39 +252,42 @@ namespace unvell.ReoGrid.Data
             }
 
             /// <summary>
-			/// Repaint filter header body
-			/// </summary>
-			/// <param name="dc">ReoGrid drawing context</param>
-			/// <param name="headerSize">Header size</param>
-			public void OnPaint(CellDrawingContext dc, Size headerSize)
-			{
-				var controlStyle = dc.Worksheet.controlAdapter.ControlStyle;
+            /// Repaint filter header body
+            /// </summary>
+            /// <param name="dc">ReoGrid drawing context</param>
+            /// <param name="headerSize">Header size</param>
+            public void OnPaint(CellDrawingContext dc, Size headerSize)
+            {
+                var controlStyle = dc.Worksheet.controlAdapter.ControlStyle;
 
-				if (this.autoFilter.columnFilterUIFlag == AutoColumnFilterUI.DropdownButton
-					|| this.autoFilter.columnFilterUIFlag == AutoColumnFilterUI.DropdownButtonAndPanel)
-				{
-					Rectangle bounds = GetColumnFilterButtonRect(headerSize);
+                if (this.autoFilter.columnFilterUIFlag != AutoColumnFilterUI.DropdownButton &&
+                    this.autoFilter.columnFilterUIFlag != AutoColumnFilterUI.DropdownButtonAndPanel) 
+                    return;
 
-					SolidColor color1 = controlStyle.GetColHeadStartColor(isHover: false, isInvalid: false,
-						isSelected: IsDropdown, isFullSelected: false);
+                var bounds = GetColumnFilterButtonRect(headerSize);
 
-					SolidColor color2 = controlStyle.GetColHeadEndColor(isHover: false, isInvalid: false,
-						isSelected: IsDropdown, isFullSelected: false);
+                if (!(bounds.Width > 0) || !(bounds.Height > 0)) 
+                    return;
 
-					var g = dc.Graphics;
+                var color1 = controlStyle.GetColHeadStartColor(isHover: false, isInvalid: false,
+                    isSelected: IsDropdown, isFullSelected: false);
 
-					g.FillRectangleLinear(color1, color2, 90f, bounds);
+                var color2 = controlStyle.GetColHeadEndColor(isHover: false, isInvalid: false,
+                    isSelected: IsDropdown, isFullSelected: false);
 
-					g.DrawRectangle(bounds, unvell.ReoGrid.Rendering.StaticResources.SystemColor_ControlDark);
+                var g = dc.Graphics;
 
-					unvell.Common.GraphicsToolkit.FillTriangle(dc.Graphics.PlatformGraphics, 
-						Math.Min(7 * dc.Worksheet.renderScaleFactor, 7.0f),
-						new Point(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2), 
-						unvell.Common.GraphicsToolkit.TriangleDirection.Down);
-				}
-			}
+                g.FillRectangleLinear(color1, color2, 90f, bounds);
 
-			/// <summary>
+                g.DrawRectangle(bounds, unvell.ReoGrid.Rendering.StaticResources.SystemColor_ControlDark);
+
+                unvell.Common.GraphicsToolkit.FillTriangle(dc.Graphics.PlatformGraphics,
+                    Math.Min(7 * dc.Worksheet.renderScaleFactor, 7.0f),
+                    new Point(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2),
+                    unvell.Common.GraphicsToolkit.TriangleDirection.Down);
+            }
+
+            /// <summary>
 			/// Handling mouse-down process
 			/// </summary>
 			/// <param name="headerSize">Header size</param>
@@ -332,19 +335,19 @@ namespace unvell.ReoGrid.Data
 				return bounds.Contains(position);
 			}
 
-			internal Rectangle GetColumnFilterButtonRect(Size size)
-			{
-				var sheet = this.ColumnHeader.Worksheet;
+            internal Rectangle GetColumnFilterButtonRect(Size size)
+            {
+                var sheet = this.ColumnHeader.Worksheet;
 
-				RGFloat scale = sheet.renderScaleFactor;
+                RGFloat scale = sheet.renderScaleFactor;
 
-				Rectangle bounds = new Rectangle(0, 0, Math.Min(Math.Min(size.Width - 2, 18f * scale), 20),
-					Math.Min(Math.Min(size.Height - 2, 18 * scale), 20));
-				bounds.X = size.Width - bounds.Width - 2;
-				bounds.Y = (size.Height - bounds.Height) / 2 - 1;
+                Rectangle bounds = new Rectangle(0, 0, Math.Min(Math.Min(size.Width - 2, 18f * scale), 20),
+                    Math.Min(Math.Min(size.Height - 2, 18 * scale), 20));
+                bounds.X = size.Width - bounds.Width - 2;
+                bounds.Y = (size.Height - bounds.Height) / 2 - 1;
 
-				return bounds;
-			}
+                return bounds;
+            }
 
 #if WINFORM
 			/// <summary>

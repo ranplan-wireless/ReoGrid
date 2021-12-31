@@ -172,8 +172,7 @@ namespace unvell.ReoGrid.Views
 
                                 isProcessed = header.Body.OnMouseDown(
                                     new Size(header.InnerWidth * this.scaleFactor, sheet.colHeaderHeight), arg);
-                                sheet.selectionRange.Col = col;
-                                sheet.selectionRange.Cols = 1;
+                                sheet.SelectionRange = new RangePosition(0, col, sheet.Rows, 1);
                             }
                         }
 
