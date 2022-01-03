@@ -123,6 +123,9 @@ namespace unvell.ReoGrid.Data
                     var cell = this.Worksheet.GetCell(r, c);
                     if (cell == null)
                     {
+                        if (!columnFilterBody.SelectedTextItems.Contains(LanguageResource.Filter_Blanks))
+                            return false;
+
                         c++;
                         continue;
                     }
@@ -516,33 +519,36 @@ namespace unvell.ReoGrid.Data
 			}
 			#endregion // TextFilterCollection
 
-			/// <summary>
-			/// Get distinct items from spreadsheet on current column
-			/// </summary>
-			/// <returns></returns>
-			public List<string> GetDistinctItems()
-			{
-				if (this.ColumnHeader == null || this.ColumnHeader.Worksheet == null) return null;
+            /// <summary>
+            /// Get distinct items from spreadsheet on current column
+            /// </summary>
+            /// <returns></returns>
+            public List<string> GetDistinctItems()
+            {
+                if (this.ColumnHeader == null || this.ColumnHeader.Worksheet == null)
+                    return null;
 
-				var items = new List<string>();
+                var items = new List<string>();
 
                 var affectedFilters = ColumnHeader.Worksheet.ColumnHeaders
-                    .Where(header => header != ColumnHeader && header.Body is AutoColumnFilterBody filterBody && !filterBody.IsSelectAll)
+                    .Where(header => header != ColumnHeader && header.Body is AutoColumnFilterBody filterBody &&
+                                     !filterBody.IsSelectAll)
                     .Select(header => header.Body)
                     .Cast<AutoColumnFilterBody>();
 
-                this.ColumnHeader.Worksheet.IterateCells(this.autoFilter.ApplyRange.Row,
-                    this.ColumnHeader.Index, this.autoFilter.ApplyRange.Rows, 1, true,
+                ColumnHeader.Worksheet.IterateCells(this.autoFilter.ApplyRange.Row,
+                    ColumnHeader.Index, this.autoFilter.ApplyRange.Rows, 1, false,
                     (r, c, cell) =>
                     {
-                        var str = cell.DisplayText;
+                        var str = cell?.DisplayText ?? string.Empty;
                         if (string.IsNullOrEmpty(str)) str = LanguageResource.Filter_Blanks;
 
                         if (!items.Contains(str)
                             && (selectedTextItems.Contains(str)
                                 || affectedFilters.All(filter =>
                                     filter.selectedTextItems
-                                        .Contains(filter.ColumnHeader.Worksheet.GetCell(r, filter.ColumnHeader.Index)?.DisplayText))))
+                                        .Contains(filter.ColumnHeader.Worksheet.GetCell(r, filter.ColumnHeader.Index)
+                                            ?.DisplayText))))
                         {
                             items.Add(str);
                         }
@@ -550,12 +556,12 @@ namespace unvell.ReoGrid.Data
                         return true;
                     });
 
-				items.Sort();
+                items.Sort();
 
-				return items;
-			}
+                return items;
+            }
 
-			internal bool DataDirty { get; set; }
+            internal bool DataDirty { get; set; }
 
 			/// <summary>
 			/// Invoked when spreadsheet data changed on this column
