@@ -75,13 +75,22 @@ namespace unvell.ReoGrid
 
 			bool isFirst = true;
 			for (int r = range.Row; r <= erow; r++)
-			{
-				if (isFirst) isFirst = false; else sb.Append('\n');
+            {
+                if (RowHeaders[r].Height <= 0)
+                    continue;
+
+                if (isFirst)
+                    isFirst = false;
+                else
+                    sb.Append('\n');
 
 				bool isFirst2 = true;
 				for (int c = range.Col; c <= ecol; c++)
-				{
-					if (isFirst2) isFirst2 = false; else sb.Append('\t');
+                {
+                    if (isFirst2)
+                        isFirst2 = false;
+                    else
+                        sb.Append('\t');
 
 					var cell = this.cells[r, c];
 					if (cell != null)
