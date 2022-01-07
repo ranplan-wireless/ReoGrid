@@ -525,16 +525,15 @@ namespace unvell.ReoGrid.Data
                 var items = new List<string>();
 
                 ColumnHeader.Worksheet.IterateCells(autoFilter.ApplyRange.Row,
-                    ColumnHeader.Index, autoFilter.ApplyRange.Rows, 1, true,
+                    ColumnHeader.Index, autoFilter.ApplyRange.Rows, 1, false,
                     (r, c, cell) =>
                     {
-                        var str = cell.DisplayText;
-                        if (string.IsNullOrEmpty(str)) str = LanguageResource.Filter_Blanks;
+                        var str = cell?.DisplayText ?? string.Empty;
+                        if (string.IsNullOrEmpty(str)) 
+                            str = LanguageResource.Filter_Blanks;
 
                         if (!items.Contains(str))
-                        {
                             items.Add(str);
-                        }
 
                         return true;
                     });
