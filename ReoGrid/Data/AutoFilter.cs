@@ -145,12 +145,6 @@ namespace unvell.ReoGrid.Data
                 // show the row
                 return true;
             });
-
-            var autoFilterHeaderBodies = Worksheet.ColumnHeaders
-                                                  .Select(header => header.Body)
-                                                  .Where(body => body is AutoColumnFilterBody);
-            foreach (var autoFilterHeaderBody in autoFilterHeaderBodies)
-                autoFilterHeaderBody.OnDataChange(ApplyRange.Row, ApplyRange.EndRow);
         }
 
         #region FilterColumnCollection
@@ -525,30 +519,19 @@ namespace unvell.ReoGrid.Data
             /// <returns></returns>
             public List<string> GetDistinctItems()
             {
-                if (this.ColumnHeader == null || this.ColumnHeader.Worksheet == null)
+                if (ColumnHeader?.Worksheet == null)
                     return null;
 
                 var items = new List<string>();
 
-                var affectedFilters = ColumnHeader.Worksheet.ColumnHeaders
-                    .Where(header => header != ColumnHeader && header.Body is AutoColumnFilterBody filterBody &&
-                                     !filterBody.IsSelectAll)
-                    .Select(header => header.Body)
-                    .Cast<AutoColumnFilterBody>();
-
-                ColumnHeader.Worksheet.IterateCells(this.autoFilter.ApplyRange.Row,
-                    ColumnHeader.Index, this.autoFilter.ApplyRange.Rows, 1, false,
+                ColumnHeader.Worksheet.IterateCells(autoFilter.ApplyRange.Row,
+                    ColumnHeader.Index, autoFilter.ApplyRange.Rows, 1, true,
                     (r, c, cell) =>
                     {
-                        var str = cell?.DisplayText ?? string.Empty;
+                        var str = cell.DisplayText;
                         if (string.IsNullOrEmpty(str)) str = LanguageResource.Filter_Blanks;
 
-                        if (!items.Contains(str)
-                            && (selectedTextItems.Contains(str)
-                                || affectedFilters.All(filter =>
-                                    filter.selectedTextItems
-                                        .Contains(filter.ColumnHeader.Worksheet.GetCell(r, filter.ColumnHeader.Index)
-                                            ?.DisplayText))))
+                        if (!items.Contains(str))
                         {
                             items.Add(str);
                         }
