@@ -195,7 +195,7 @@ namespace unvell.ReoGrid
 			{
 				if (maxcol < col) maxcol = col;
 
-				if (!checkReadonly || !cell.IsReadOnly)
+				if ((!checkReadonly || !cell.IsReadOnly) && cell.IsVisible)
 				{
 					cell.InnerData = null;
 					cell.InnerDisplay = string.Empty;
