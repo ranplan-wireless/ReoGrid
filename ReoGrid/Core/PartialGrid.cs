@@ -19,9 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
 using unvell.ReoGrid.Core;
 
 #if FORMULA
@@ -390,13 +387,18 @@ namespace unvell.ReoGrid
 			{
 				data.Cells = new CellArray();
 
-				for (int r = range.Row; r <= range.EndRow; r++)
-				{
+                var rIndex = range.Row;
+                var r = range.Row;
+				for (; r <= range.EndRow; r++)
+                {
+                    if (RowHeaders[r].Height <= 0)
+                        continue;
+
 					for (int c = range.Col; c <= range.EndCol; c++)
 					{
 						var cell = this.cells[r, c];
 
-						int toRow = r - range.Row;
+						int toRow = rIndex - range.Row;
 						int toCol = c - range.Col;
 
 						//if (cell == null && data.Cells[toRow, toCol] == null)
@@ -411,7 +413,8 @@ namespace unvell.ReoGrid
 						{
 							toCell = new Cell(this);
 							CellUtility.CopyCell(toCell, cell);
-						}
+                            toCell.InternalPos = new CellPosition(toRow, toCol);
+                        }
 						else
 						{
 							StyleParentKind pKind = StyleParentKind.Own;
@@ -435,7 +438,9 @@ namespace unvell.ReoGrid
 						}
 
 						//c += (cell == null || cell.Colspan < 1) ? 1 : cell.Colspan;
-					}
+                    }
+
+                    rIndex++;
 				}
 			}
 
