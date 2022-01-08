@@ -1061,7 +1061,8 @@ namespace unvell.ReoGrid
 			int y = row == 0 ? 0 : rows[row - 1].Bottom;
 			int top = y;
 
-			ushort height = rows[row].InnerHeight;
+			ushort innerHeight = rows[row].InnerHeight;
+			ushort lastHeight = rows[row].LastHeight;
 
 			RowHeader[] headers = new RowHeader[count];
 
@@ -1071,18 +1072,19 @@ namespace unvell.ReoGrid
 				{
 					Row = row + i,
 					Top = y,
-					InnerHeight = height,
+					LastHeight = lastHeight,
+					InnerHeight = innerHeight,
 					InnerStyle = rows[row].InnerStyle == null ? null : new WorksheetRangeStyle(rows[row].InnerStyle),
 					IsAutoHeight = true,
 				};
 
-				y += height;
+				y += innerHeight;
 			}
 
 			// insert row headers
 			rows.InsertRange(row, headers);
 
-			int totalHeight = height * count;
+			int totalHeight = innerHeight * count;
 
 			#endregion
 
