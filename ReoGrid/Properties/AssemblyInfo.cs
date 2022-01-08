@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Powerful and lightweight open source .NET spreadsheet component. Compatible with Excel 2007 format or later. Simple APIs to open/edit/save/print an Excel spreadsheet in the .NET application.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("unvell")]
-[assembly: AssemblyProduct("ReoGrid")]
+[assembly: AssemblyProduct("Ranplan.ReoGrid")]
 [assembly: AssemblyCopyright("Copyright © 2012-2021 Jingwood & unvell, all rights reserved.")]
 [assembly: AssemblyTrademark("ReoGrid.NET")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.0.0.0")]
-[assembly: AssemblyFileVersion("3.0.0.0")]
+[assembly: AssemblyVersion("1.0.20.0")]
+[assembly: AssemblyFileVersion("1.0.20.0")]
