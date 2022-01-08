@@ -6,6 +6,7 @@ using MoreLinq;
 using unvell.ReoGrid.CellTypes;
 using unvell.ReoGrid.Data;
 using unvell.ReoGrid.DataFormat;
+using unvell.ReoGrid.Graphics;
 
 namespace unvell.ReoGrid.Demo
 {
@@ -84,7 +85,7 @@ namespace unvell.ReoGrid.Demo
                 j = i;
             });
             //worksheet[3, 0] = new string[worksheet.ColumnCount];
-            worksheet[j++, 0] = Enumerable.Repeat(string.Empty, worksheet.ColumnCount).ToArray();
+            //worksheet[j++, 0] = Enumerable.Repeat(string.Empty, worksheet.ColumnCount).ToArray();
             // worksheet[3, 1] = string.Empty;
             // worksheet[3, 1] = new CheckBoxCell();
             // worksheet[3, 2] = string.Empty;
@@ -93,6 +94,15 @@ namespace unvell.ReoGrid.Demo
 
             worksheet.SetCols(4);
             worksheet.SetRows(j);
+
+            // var worksheetRangeStyle = new WorksheetRangeStyle
+            // {
+            //     Flag = PlainStyleFlag.BackColor,
+            //     BackColor= SolidColor.LightGreen,
+            // };
+            // worksheet.SetRangeStyles(RangePosition.EntireRange, worksheetRangeStyle);
+            // worksheet.SetRangeBorders(RangePosition.EntireRange, BorderPositions.All,
+            //     new RangeBorderStyle(SolidColor.Red, BorderLineStyle.BoldDashDot));
 
             var numberFormatArgs = new NumberDataFormatter.NumberFormatArgs {DecimalPlaces = 2};
             worksheet.SetRangeDataFormat(new RangePosition(0, 3, -1, 1), CellDataFormatFlag.Number, numberFormatArgs);
@@ -120,9 +130,8 @@ namespace unvell.ReoGrid.Demo
         private void button1_Click(object sender, System.EventArgs e)
         {
             var worksheet = _table.Worksheets.First();
-            var elderCount = worksheet.RowCount;
             worksheet.AppendRows(1);
-            worksheet[elderCount, 0] = Enumerable.Repeat(string.Empty, worksheet.ColumnCount).ToArray();
+            //worksheet[elderCount, 0] = Enumerable.Repeat(string.Empty, worksheet.ColumnCount).ToArray();
             _selectionFilter.RefreshApplyRange(RangePosition.EntireRange);
         }
 
@@ -130,6 +139,14 @@ namespace unvell.ReoGrid.Demo
         {
             _table.Worksheets.First().Resize(0, 0);
             LoadData(_table.Worksheets.First());
+        }
+
+        private void btn_InsertRow_Click(object sender, EventArgs e)
+        {
+            var worksheet = _table.Worksheets.First();
+            var elderCount = worksheet.RowCount;
+            worksheet.InsertRows(elderCount / 2, 1);
+            _selectionFilter.RefreshApplyRange(RangePosition.EntireRange);
         }
 
         /*private void cb_Selected_CheckedChanged(object sender, System.EventArgs e)
