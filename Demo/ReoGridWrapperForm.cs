@@ -130,9 +130,13 @@ namespace unvell.ReoGrid.Demo
         private void button1_Click(object sender, System.EventArgs e)
         {
             var worksheet = _table.Worksheets.First();
-            worksheet.AppendRows(1);
+            worksheet.AppendRows(8000);
             //worksheet[elderCount, 0] = Enumerable.Repeat(string.Empty, worksheet.ColumnCount).ToArray();
             _selectionFilter.RefreshApplyRange(RangePosition.EntireRange);
+
+            Enumerable.Range(0, worksheet.Rows)
+                .ForEach(row => worksheet.SetRangeBorders(new RangePosition(row, 1, 1, 1), BorderPositions.All,
+                    RangeBorderStyle.GrayDotted));
         }
 
         private void btn_Reset_Click(object sender, EventArgs e)

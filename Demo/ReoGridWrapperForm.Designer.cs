@@ -30,10 +30,10 @@ namespace unvell.ReoGrid.Demo
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btn_InsertRow = new System.Windows.Forms.Button();
             this.btn_Reset = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btn_InsertRow = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,6 +47,16 @@ namespace unvell.ReoGrid.Demo
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(800, 100);
             this.panel1.TabIndex = 0;
+            // 
+            // btn_InsertRow
+            // 
+            this.btn_InsertRow.Location = new System.Drawing.Point(382, 43);
+            this.btn_InsertRow.Name = "btn_InsertRow";
+            this.btn_InsertRow.Size = new System.Drawing.Size(106, 28);
+            this.btn_InsertRow.TabIndex = 2;
+            this.btn_InsertRow.Text = "Insert Row";
+            this.btn_InsertRow.UseVisualStyleBackColor = true;
+            this.btn_InsertRow.Click += new System.EventHandler(this.btn_InsertRow_Click);
             // 
             // btn_Reset
             // 
@@ -75,16 +85,6 @@ namespace unvell.ReoGrid.Demo
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(800, 350);
             this.panel2.TabIndex = 1;
-            // 
-            // btn_InsertRow
-            // 
-            this.btn_InsertRow.Location = new System.Drawing.Point(382, 43);
-            this.btn_InsertRow.Name = "btn_InsertRow";
-            this.btn_InsertRow.Size = new System.Drawing.Size(106, 28);
-            this.btn_InsertRow.TabIndex = 2;
-            this.btn_InsertRow.Text = "Insert Row";
-            this.btn_InsertRow.UseVisualStyleBackColor = true;
-            this.btn_InsertRow.Click += new System.EventHandler(this.btn_InsertRow_Click);
             // 
             // ReoGridWrapperForm
             // 
