@@ -1406,7 +1406,7 @@ namespace unvell.ReoGrid
 
 			if (cell != null)
 			{
-				cell = GetMergedCellOfRange(pos.Row, selEnd.Col);
+				cell = GetMergedCellOfRange(pos.Row, pos.Col);
 				pos = cell.Position;
 			}
 
@@ -1444,7 +1444,7 @@ namespace unvell.ReoGrid
 
 			if (cell != null)
 			{
-				cell = GetMergedCellOfRange(pos.Row, selEnd.Col);
+				cell = GetMergedCellOfRange(pos.Row, pos.Col);
 				pos = cell.Position;
 			}
 
