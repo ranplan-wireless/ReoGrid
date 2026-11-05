@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ranplan.ReoGrid, packed from a Release build of ReoGrid\ReoGrid.csproj (Visual Studio MSBuild,
+  which also builds the net40 resources):
+    msbuild ReoGrid\ReoGrid.csproj -restore -p:Configuration=Release
+    nuget pack NuGet\Ranplan.ReoGrid.nuspec -Version <x.y.z>
+  Keep -Version equal to AssemblyVersion in ReoGrid\Properties\AssemblyInfo.cs.
+  Antlr3.Runtime and unvell.ReoScript have no packages, so they ship next to unvell.ReoGrid.dll.
+-->
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Ranplan.ReoGrid</id>
+    <version>$version$</version>
+    <title>unvell.ReoGrid for Ranplan</title>
+    <authors>Ranplan</authors>
+    <owners>Ranplan</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/ranplan-wireless/ReoGrid</projectUrl>
+    <description>unvell.ReoGrid for Ranplan, for .NET Framework (net40) and .NET 8 (net8.0-windows).</description>
+    <copyright>Copyright © 2021 Ranplan</copyright>
+    <tags>ReoGrid</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="DotNetZip" version="1.15.0" />
+      </group>
+      <group targetFramework="net8.0-windows7.0">
+        <dependency id="DotNetZip" version="1.15.0" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net8.0-windows7.0">
+        <frameworkReference name="Microsoft.WindowsDesktop.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="..\ReoGrid\bin\Release\net40\unvell.ReoGrid.dll" target="lib\net40" />
+    <file src="..\ReoGrid\bin\Release\net40\unvell.ReoGrid.XML" target="lib\net40" />
+    <file src="..\Ref\unvell.ReoScript.dll" target="lib\net40" />
+    <file src="..\Ref\Antlr3.Runtime.dll" target="lib\net40" />
+    <file src="..\ReoGrid\bin\Release\net8.0-windows\unvell.ReoGrid.dll" target="lib\net8.0-windows7.0" />
+    <file src="..\ReoGrid\bin\Release\net8.0-windows\unvell.ReoGrid.XML" target="lib\net8.0-windows7.0" />
+    <file src="..\Ref\unvell.ReoScript.dll" target="lib\net8.0-windows7.0" />
+    <file src="..\Ref\Antlr3.Runtime.dll" target="lib\net8.0-windows7.0" />
+  </files>
+</package>
