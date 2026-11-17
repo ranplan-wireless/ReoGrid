@@ -139,8 +139,8 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.15.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
+    <Reference Include="System.IO.Compression" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NuGet\icon.png">
