@@ -19,7 +19,6 @@
  * 
  ****************************************************************************/
 
-using Ionic.Zip;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -178,9 +177,7 @@ namespace unvell.ReoGrid.Utility
 
 	internal class MZipArchive : IZipArchive
 	{
-		private Ionic.Zip.ZipFile zip;
-
-		private Stream stream;
+		private ZipArchive zip;
 
 		private MZipArchive()
 		{
@@ -190,25 +187,21 @@ namespace unvell.ReoGrid.Utility
 		{
 			return new MZipArchive()
 			{
-				zip = Ionic.Zip.ZipFile.Read(stream),
-				stream = stream,
+				zip = new ZipArchive(stream, ZipArchiveMode.Read, true),
 			};
 		}
 
 		internal static MZipArchive CreateOnStream(Stream stream)
 		{
-			var mzip = new MZipArchive()
+			return new MZipArchive()
 			{
-				zip = new Ionic.Zip.ZipFile(),
-				stream = stream,
+				zip = new ZipArchive(stream, ZipArchiveMode.Create, true),
 			};
-
-			return mzip;
 		}
 
 		public IZipEntry GetFile(string path)
 		{
-			var entry = zip.SingleOrDefault(e => e.FileName == path);
+			var entry = zip.Entries.FirstOrDefault(e => e.FullName == path);
 			if (entry == null) return null;
 
 			return new MZipEntry(entry);
@@ -216,30 +209,47 @@ namespace unvell.ReoGrid.Utility
 
 		public IZipEntry AddFile(string path, Stream stream)
 		{
-			return new MZipEntry(zip.AddEntry(path, stream));
+			// ZipArchive writes an entry when its stream is closed, so the caller's
+			// stream has to be copied here rather than at Flush like DotNetZip did.
+			var entry = zip.CreateEntry(path, CompressionLevel.Optimal);
+			using (var entryStream = entry.Open())
+			{
+				stream.CopyTo(entryStream);
+			}
+
+			return new MZipEntry(entry);
 		}
 
 		public bool IsFileExist(string path)
 		{
-			return zip.Any(entry => entry.FileName == path);
+			return zip.Entries.Any(entry => entry.FullName == path);
 		}
 
 		public void Flush()
 		{
-			zip.Save(this.stream);
+			DisposeArchive();
 		}
 
 		public void Close()
 		{
-			zip.Dispose();
+			DisposeArchive();
+		}
+
+		private void DisposeArchive()
+		{
+			if (zip != null)
+			{
+				zip.Dispose();
+				zip = null;
+			}
 		}
 	}
 
 	internal class MZipEntry : IZipEntry
 	{
-		private ZipEntry entry;
+		private ZipArchiveEntry entry;
 
-		internal MZipEntry(ZipEntry entry)
+		internal MZipEntry(ZipArchiveEntry entry)
 		{
 			this.entry = entry;
 		}
@@ -252,7 +262,10 @@ namespace unvell.ReoGrid.Utility
 		public Stream GetStream()
 		{
 			var ms = new MemoryStream();
-			entry.Extract(ms);
+			using (var stream = entry.Open())
+			{
+				stream.CopyTo(ms);
+			}
 			ms.Position = 0;
 			return ms;
 		}
